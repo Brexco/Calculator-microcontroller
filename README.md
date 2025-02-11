@@ -1,0 +1,2 @@
+# Calculator-microcontroller
+Wygoda_Jan_IU14108890_DLBROEPRS01_D_Aufgabe-2_Erarbeitungs-/Reflexionsphase
