@@ -1,2 +1,6 @@
-# Calculator-microcontroller
-Wygoda_Jan_IU14108890_DLBROEPRS01_D_Aufgabe-2_Erarbeitungs-/Reflexionsphase
+# Introduction
+The Calculator-Microcontroller is a system with goals are:
+
+
+
+# config-file 
