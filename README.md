@@ -1,8 +1,9 @@
 # Introduction
 The Calculator-Microcontroller is a system with goals are:
-  creats a HTTP network
-  calculating simple mathematical problems
-  saves calculated calculations
+
+  - creats a HTTP network\n
+  - calculating simple mathematical problems
+  - saves calculated calculations
 # config-file 
 The configuration for setting up both the mDNS and the calculator can be found in the file "Arduino_IDE_ESP-mDNS_Config.ino".
 ## Requirements 
