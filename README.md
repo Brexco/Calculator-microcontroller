@@ -17,7 +17,7 @@ The configuration for setting up both the mDNS and the calculator can be found i
   - You will need three LEDs.
   - A breadboard is also necessary.
 
-client:
+# client:
 
 - windows 64 bit
 - gcc-Compiler xyz
