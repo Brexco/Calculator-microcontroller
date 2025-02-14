@@ -4,28 +4,26 @@
 #include <curl/curl.h>
 #include <fstream>
 
-using namespace std;
-
-// Callback-Funktion für cURL, um den Inhalt zu speichern
-size_t WriteCallback(void* contents, size_t size, size_t nmemb, string* output) {
+// Callback-Funktion fÃ¼r cURL, um den Inhalt zu speichern
+size_t WriteCallback(void* contents, size_t size, size_t nmemb, std::string* output) {
     size_t totalSize = size * nmemb;
     output->append((char*)contents, totalSize);
     return totalSize;
 }
 
 // Funktion zum Ersetzen des Operators
-string encodeOperator(char operation) {
+std::string encodeOperator(char operation) {
     if (operation == '+') return "%2B";
     if (operation == '*') return "%2A";
     if (operation == '/') return "%2F";
-    return string(1, operation);
+    return std::string(1, operation);
 }
 
 // Funktion zum Abrufen des Webseiteninhalts
-string fetchWebContent(const string& url) {
+std::string fetchWebContent(const std::string& url) {
     CURL* curl;
     CURLcode res;
-    string response;
+    std::string response;
 
     curl = curl_easy_init();
     if (curl) {
@@ -36,21 +34,21 @@ string fetchWebContent(const string& url) {
         curl_easy_cleanup(curl);
 
         if (res != CURLE_OK) {
-            cerr << "Error retrieving the website: " << curl_easy_strerror(res) << endl;
+            std::cerr << "Error retrieving the website: " << curl_easy_strerror(res) << std::endl;
         }
     }
     return response;
 }
 
 // Funktion zur Speicherung der Berechnung in eine Datei
-void saveToFile(const string& calculation, const string& result) {
-    ofstream file("calculations.txt", ios::app);
+void saveToFile(const std::string& calculation, const std::string& result) {
+    std::ofstream file("calculations.txt", std::ios::app);
     if (file.is_open()) {
-        file << calculation << " = " << result << endl;
+        file << calculation << " = " << result << std::endl;
         file.close();
     }
     else {
-        cerr << "Error opening file for writing." << endl;
+        std::cerr << "Error opening file for writing." << std::endl;
     }
 }
 
@@ -60,33 +58,33 @@ int main() {
 
     while (true) {
         system("cls");
-        cout << "Simple natural number calculator\nAddition (+) Subtraction (-) Multiplication (*) Division (/)" << endl;
-        cout << "----------------------------------------------------------------" << endl;
+        std::cout << "Simple natural number calculator\nAddition (+) Subtraction (-) Multiplication (*) Division (/)" << std::endl;
+        std::cout << "----------------------------------------------------------------" << std::endl;
 
-        cout << "Enter the first number: ";
-        cin >> num1;
-        cout << "Enter the arithmetic operation (+, -, *, /): ";
-        cin >> operation;
-        cout << "Enter the second number:";
-        cin >> num2;
+        std::cout << "Enter the first number: ";
+        std::cin >> num1;
+        std::cout << "Enter the arithmetic operation (+, -, *, /): ";
+        std::cin >> operation;
+        std::cout << "Enter the second number:";
+        std::cin >> num2;
 
         // URL erstellen
-        string encodedOp = encodeOperator(operation);
-        string sUrl = "http://calculator.local/calculate?expression=" + to_string(num1) + encodedOp + to_string(num2);
+        std::string encodedOp = encodeOperator(operation);
+        std::string sUrl = "http://calculator.local/calculate?expression=" + std::to_string(num1) + encodedOp + std::to_string(num2);
 
-        cout << "Connecting to URL: " << sUrl << endl;
+        std::cout << "Connecting to URL: " << sUrl << std::endl;
 
         // Serverantwort abrufen
-        string pageContent = fetchWebContent(sUrl);
-        cout << "Server response:\n" << pageContent << endl;
+        std::string pageContent = fetchWebContent(sUrl);
+        std::cout << "Server response:\n" << pageContent << std::endl;
 
         // Berechnung in Datei speichern
-        saveToFile(to_string(num1) + " " + operation + " " + to_string(num2), pageContent);
+        saveToFile(std::to_string(num1) + " " + operation + " " + std::to_string(num2), pageContent);
 
         // Wiederholen oder Beenden
-        cout << "\nAnother calculation? (Y)es: ";
+        std::cout << "\nAnother calculation? (Y)es: ";
         char wahl;
-        cin >> wahl;
+        std::cin >> wahl;
         if (wahl != 'y' && wahl != 'Y') {
             break;
         }
