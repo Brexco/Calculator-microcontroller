@@ -3,7 +3,7 @@
 * Version: 01.00.04
 * Date:    12.02.2025
 * File:    main.cpp
-* Remark:  Nimmt die Benutzereingaben für eine mathematische Berechnung entgegen und sendet den Term zur Berechnung an uC.
+* Remark:  Nimmt die Benutzereingaben fÃ¼r eine mathematische Berechnung entgegen und sendet den Term zur Berechnung an uC.
            Entgegennahme und Anzeige des Ergebnisses. Die einzelnen Schritte werden im Logging festgehalten.
 */
 
@@ -21,8 +21,8 @@
 * @remarks  Diese Funktion wird von cURL verwendet, um empfangene Daten in einen String zu schreiben.
 *           Sie wird bei HTTP-Anfragen mit cURL als Schreib-Callback registriert.
 * @param contents  Zeiger auf den Datenblock, der geschrieben werden soll.
-* @param size  Größe eines einzelnen Datenblocks.
-* @param nmemb  Anzahl der Datenblöcke.
+* @param size  GrÃ¶ÃŸe eines einzelnen Datenblocks.
+* @param nmemb  Anzahl der DatenblÃ¶cke.
 * @param output  Zeiger auf den String, in den die Daten geschrieben werden.
 * @return  Die Gesamtzahl der geschriebenen Bytes.
 */
@@ -33,7 +33,7 @@ size_t WriteCallback(void* contents, size_t size, size_t nmemb, string* output) 
 }
 
 /**
-* @brief  Kodiert mathematische Operatoren für eine URL.
+* @brief  Kodiert mathematische Operatoren fÃ¼r eine URL.
 * @param cOperation  Der mathematische Operator, der kodiert werden soll.
 * @return  Der URL-kodierte Operator als String.
 */
@@ -101,19 +101,19 @@ int main() {
         cout << "Enter the second number: ";
         cin >> dNum2;
 
-        //erstellung des Links/Abfrage
+        // Erstellung des Links/Abfrage
         std::string encodedOp = encodeOperator(cOperation);
         std::string sUrl = "http://calculator.local/calculate?expression=" + to_string(dNum1) + encodedOp + to_string(dNum2);
         cout << "Connecting to URL: " << sUrl << endl;
 
-        // Web antwort
+        // Web-Antwort
         std::string sPageContent = fetchWebContent(sUrl);
         cout << "Server response:\n" << sPageContent << endl;
 
-        // Speicherung in txt
+        // Speicherung ins Logging
         saveToFile(to_string(dNum1) + " " + cOperation + " " + to_string(dNum2), sPageContent);
 
-        // Abfrage neue Berrechnung 
+        // Abfrage neue Berechnung 
         cout << "\nAnother calculation? (Y)es press any other key to leave: ";
         std::char cWahl;
         std::cin >> cWahl;
