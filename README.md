@@ -30,13 +30,15 @@ The configuration for setting up both the mDNS and the calculator can be found i
 - curl version
 WLAN-Konfiguration
 
-## Einrichtung
+## Setup
 # server:
 
+ - supporting GIF in "Tutoring"-setup-server
  - copy "Adruino_IDE_ESP-mDNS_Config.ino" via micro-USB to the ESP8266
  - Server starts when power is available
 
 # client:
 
+ -supporting GIF in "Tutoring"-setup_client
  - copy "Visual_Studio_Function.cpp" to your local drive
  - open VSC and start the application
