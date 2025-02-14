@@ -82,7 +82,7 @@ int main() {
         saveToFile(std::to_string(num1) + " " + operation + " " + std::to_string(num2), pageContent);
 
         // Wiederholen oder Beenden
-        std::cout << "\nAnother calculation? (Y)es: ";
+        std::cout << "\nAnother calculation? (Y)es or press any other key to leave:  ";
         char wahl;
         std::cin >> wahl;
         if (wahl != 'y' && wahl != 'Y') {
