@@ -35,8 +35,8 @@ Key Functions:
  - main: The entry point for the program that runs the calculation loop.
 
 # Help 
- 1. Hilfe für Setup-Server unter Calculator-microcontroller/Tutorial/setup-server.gif
- 2. Hilfe für Setup-client unter Calculator-microcontroller/Tutorial/setup_client.gif
+ 1. Help for Setup-Server under Calculator-microcontroller/Tutorial/setup-server.gif
+ 2. Help for für Setup-client under Calculator-microcontroller/Tutorial/setup_client.gif
    
 # 2. ESP8266_Calculator_Server.cpp
 Description:
