@@ -33,6 +33,10 @@ Key Functions:
  - saveToFile: Appends the mathematical expression and result to calculations.txt.
  - performCalculation: The main function that coordinates the input collection, HTTP request, and result display.
  - main: The entry point for the program that runs the calculation loop.
+
+# Help 
+ 1. Hilfe für Setup-Server unter Calculator-microcontroller/Tutorial/setup-server.gif
+ 2. Hilfe für Setup-client unter Calculator-microcontroller/Tutorial/setup_client.gif
    
 # 2. ESP8266_Calculator_Server.cpp
 Description:
