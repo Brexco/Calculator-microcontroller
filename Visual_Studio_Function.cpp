@@ -1,157 +1,168 @@
-/*
-* Author:  Jan Wygoda
-* Version: 01.00.05
-* Date:    12.02.2025
-* File:    main.cpp
-* @brief   Nimmt die Benutzereingaben für eine mathematische Berechnung entgegen.
-* @remarks Sendet den Term zur Berechnung an uC, entgegennimmt das Ergebnis und loggt die Schritte.
+/**
+* @author Jan Wygoda
+* @version 01.00.05
+* @date 12.02.2025
+* @file ESP8266_Calculator_Server.cpp
+* @brief Einfache Webserver-Anwendung zur Berechnung mathematischer Ausdrücke auf einem ESP8266.
 */
 
 //////////////////////////////
 //      System Includes     //
 //////////////////////////////
-#include <iostream>
-#include <windows.h>
-#include <string>
-#include <curl/curl.h>
-#include <fstream>
-#include <limits>
+#include <ESP8266WiFi.h>
+#include <ESP8266mDNS.h>
+#include <ESP8266WebServer.h>
+
+// WiFi-Konfiguration
+const char* cSsid = "USER_SSID";
+const char* cPassword = "USER_SSID_PASSWORD";
+
+// LED-Pins
+const int iLedReset = D5;    ///< Blaue LED: Reset
+const int iLedServer = D6;   ///< Grüne LED: Server online
+const int iLedProcessing = D7; ///< Gelbe LED: Verarbeitung
+
+ESP8266WebServer server(80); // HTTP-Server auf Port 80
 
 /**
-* @brief   Callback-Funktion zum Schreiben von Daten in einen String.
-* @remarks Diese Funktion wird von cURL verwendet, um empfangene Daten in einen String zu speichern.
-* @param   contents Zeiger auf den Datenblock, der geschrieben werden soll.
-* @param   size Größe eines einzelnen Datenblocks.
-* @param   nmemb Anzahl der Datenblöcke.
-* @param   output Zeiger auf den String, in den die Daten geschrieben werden.
-* @return  Die Gesamtzahl der geschriebenen Bytes.
+* @brief Einrichtung der Hardware und Netzwerkverbindung.
 */
-size_t WriteCallback(void* contents, size_t size, size_t nmemb, std::string* output)
-{
-    size_t totalSize = size * nmemb;
-    output->append((char*)contents, totalSize);
-    return totalSize;
+void setup() {
+  Serial.begin(115200);
+
+  setupPins();
+  connectToWiFi();
+  startMDNS();
+  startServer();
 }
 
 /**
-* @brief   Kodiert mathematische Operatoren für eine URL.
-* @remarks Ersetzt bestimmte Operatoren durch ihre URL-kodierten Entsprechungen.
-* @param   cOperation Der mathematische Operator, der kodiert werden soll.
-* @return  Der URL-kodierte Operator als String.
+* @brief Konfiguriert die Pins.
 */
-std::string encodeOperator(const char cOperation)
-{
-    if (cOperation == '+') return "%2B";
-    if (cOperation == '*') return "%2A";
-    if (cOperation == '/') return "%2F";
-    return std::string(1, cOperation);
+void setupPins() {
+  pinMode(iLedReset, OUTPUT);
+  pinMode(iLedServer, OUTPUT);
+  pinMode(iLedProcessing, OUTPUT);
+
+  digitalWrite(iLedReset, HIGH);
+  digitalWrite(iLedServer, LOW);
+  digitalWrite(iLedProcessing, LOW);
 }
 
 /**
-* @brief   Ruft Webinhalt von einer angegebenen URL ab.
-* @remarks Verwendet cURL, um eine HTTP-Anfrage an die angegebene URL zu senden.
-* @param   sUrl Die URL, von der der Inhalt abgerufen werden soll.
-* @return  Der Inhalt der Webseite als String.
+* @brief Stellt die Verbindung zum WiFi her.
 */
-std::string fetchWebContent(const std::string& sUrl)
-{
-    CURL* curl;
-    CURLcode res;
-    std::string sResponse;
-
-    curl = curl_easy_init();
-    if (curl) {
-        curl_easy_setopt(curl, CURLOPT_URL, sUrl.c_str());
-        curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, WriteCallback);
-        curl_easy_setopt(curl, CURLOPT_WRITEDATA, &sResponse);
-        res = curl_easy_perform(curl);
-        curl_easy_cleanup(curl);
-
-        if (res != CURLE_OK) {
-            std::cerr << "Error retrieving the website: " << curl_easy_strerror(res) << std::endl;
-        }
-    }
-    return sResponse;
+void connectToWiFi() {
+  WiFi.begin(cSsid, cPassword);
+  Serial.print("Connecting to WiFi");
+  while (WiFi.status() != WL_CONNECTED) {
+    delay(500);
+    Serial.print(".");
+  }
+  Serial.println("\nConnected to WiFi");
 }
 
 /**
-* @brief   Speichert eine Berechnung und das Ergebnis in einer Datei.
-* @remarks Öffnet eine Datei und hängt die Berechnung an das Ende an.
-* @param   sCalculation Der mathematische Ausdruck als String.
-* @param   sResult Das Ergebnis der Berechnung.
+* @brief Startet mDNS.
 */
-void saveToFile(const std::string& sCalculation, const std::string& sResult)
-{
-    std::ofstream file("calculations.txt", std::ios::app);
-    if (file) {
-        file << sCalculation << " = " << sResult << std::endl;
-        file.close();
-    }
-    else {
-        std::cerr << "Error opening file for writing." << std::endl;
-    }
+void startMDNS() {
+  if (MDNS.begin("calculator")) {
+    Serial.println("mDNS responder started");
+  }
+
+  MDNS.addService("http", "tcp", 80);
 }
 
 /**
-* @brief   Führt eine mathematische Berechnung durch.
-* @remarks Fragt Benutzereingaben ab, sendet eine Anfrage an die URL und speichert das Ergebnis.
+* @brief Startet den HTTP-Server und registriert die Endpunkte.
 */
-void performCalculation()
-{
-    double dNum1, dNum2;
-    char cOperation;
-
-    system("cls");
-    std::cout << "Simple natural number calculator\nAddition (+) Subtraction (-) Multiplication (*) Division (/)" << std::endl;
-    std::cout << "----------------------------------------------------------------" << std::endl;
-
-    std::cout << "Enter the first number: ";
-    if (!(std::cin >> dNum1)) {
-        std::cerr << "Error: Invalid input! Please enter a valid number." << std::endl;
-        std::cin.clear();
-        std::cin.ignore((std::numeric_limits<std::streamsize>::max)(), '\n');
-        return;
-    }
-
-    std::cout << "Enter the arithmetic operation (+, -, *, /): ";
-    std::cin >> cOperation;
-    if (cOperation != '+' && cOperation != '-' && cOperation != '*' && cOperation != '/') {
-        std::cerr << "Error: Invalid operator! Please enter one of the following: +, -, *, /" << std::endl;
-        return;
-    }
-
-    std::cout << "Enter the second number: ";
-    if (!(std::cin >> dNum2)) {
-        std::cerr << "Error: Invalid input! Please enter a valid number." << std::endl;
-        std::cin.clear();
-        std::cin.ignore((std::numeric_limits<std::streamsize>::max)(), '\n');
-        return;
-    }
-
-    std::string encodedOp = encodeOperator(cOperation);
-    std::string sUrl = "http://calculator.local/calculate?expression=" + std::to_string(dNum1) + encodedOp + std::to_string(dNum2);
-
-    std::cout << "Connecting to URL: " << sUrl << std::endl;
-    std::string sPageContent = fetchWebContent(sUrl);
-    std::cout << "Server response:\n" << sPageContent << std::endl;
-
-    saveToFile(std::to_string(dNum1) + " " + cOperation + " " + std::to_string(dNum2), sPageContent);
+void startServer() {
+  server.on("/calculate", handleCalculate);
+  server.begin();
+  Serial.println("HTTP-Server gestartet");
+  digitalWrite(iLedServer, HIGH);
 }
 
 /**
-* @brief   Startet das Hauptprogramm.
-* @remarks Führt Berechnungen in einer Schleife aus, bis der Benutzer das Programm beendet.
-* @return  0, wenn das Programm erfolgreich beendet wurde (Wenn was anderes als y/Y eingegeben wurde).
+* @brief Verarbeitung einer mathematischen Berechnung.
+* @details Diese Funktion empfängt einen mathematischen Ausdruck als HTTP-Parameter,
+*          führt die Berechnung durch und sendet das Ergebnis als Antwort.
 */
-int main() {
-    while (true) {
-        performCalculation();
-        std::cout << "\nAnother calculation? (Y)es press any other key to leave: ";
-        char cWahl;
-        std::cin >> cWahl;
-        if (cWahl != 'y' && cWahl != 'Y') {
-            break;
-        }
+void handleCalculate() {
+  digitalWrite(iLedProcessing, HIGH); // Verarbeitung starten (LED an)
+
+  if (server.hasArg("expression")) {
+    String expression = server.arg("expression");
+    float result = performCalculation(expression);
+    
+    if (isnan(result)) {
+      server.send(400, "text/plain", "Invalid expression or operator.");
+    } else {
+      server.send(200, "text/plain", String(result));
     }
-    return 0;
+  } else {
+    server.send(400, "text/plain", "No expression given");
+  }
+
+  digitalWrite(iLedProcessing, LOW); // Verarbeitung beenden (LED aus)
+}
+
+/**
+* @brief Führt die mathematische Berechnung durch.
+* @param expression Der mathematische Ausdruck als String.
+* @return Das Ergebnis der Berechnung oder NaN, falls ungültig.
+*/
+float performCalculation(const String& expression) {
+  char op = 0;
+  int opIndex = findOperator(expression, op);
+
+  if (opIndex == -1) {
+    return NAN; // Ungültiger Ausdruck
+  }
+
+  int num1 = expression.substring(0, opIndex).toInt();
+  int num2 = expression.substring(opIndex + 1).toInt();
+
+  switch (op) {
+    case '+': return num1 + num2;
+    case '-': return num1 - num2;
+    case '*': return num1 * num2;
+    case '/': 
+      if (num2 != 0) {
+        return (float)num1 / num2;
+      } else {
+        return NAN; // Division durch 0
+      }
+    default: return NAN; // Ungültiger Operator
+  }
+}
+
+/**
+* @brief Findet den Operator im Ausdruck.
+* @param expression Der mathematische Ausdruck als String.
+* @param op Der Operator, der gefunden wird.
+* @return Der Index des Operators oder -1, wenn kein gültiger Operator gefunden wurde.
+*/
+int findOperator(const String& expression, char& op) {
+  int opIndex = expression.indexOf('+');
+  if (opIndex > 0) { op = '+'; return opIndex; }
+  
+  opIndex = expression.indexOf('-');
+  if (opIndex > 0) { op = '-'; return opIndex; }
+  
+  opIndex = expression.indexOf('*');
+  if (opIndex > 0) { op = '*'; return opIndex; }
+  
+  opIndex = expression.indexOf('/');
+  if (opIndex > 0) { op = '/'; return opIndex; }
+  
+  return -1; // Kein Operator gefunden
+}
+
+/**
+* @brief Hauptprogrammschleife zur Verarbeitung von HTTP-Anfragen.
+*/
+void loop() {
+  server.handleClient();
+  MDNS.update();
 }
