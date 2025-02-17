@@ -69,7 +69,9 @@ Key Functions:
 1. Main Application (main.cpp)
 
  1.1 Install curl library in your C++ environment (required for HTTP requests).
+
  1.2 Compile the main.cpp file using your preferred C++ IDE or compiler.
+
  1.3 Run the executable.
  
  - The program will prompt for the first number, operator, and second number.
@@ -79,10 +81,15 @@ Key Functions:
 2. ESP8266 Web Server (ESP8266_Calculator_Server.cpp)
    
  2.1 Install the Arduino IDE and the ESP8266 board support.
+ 
  2.2 Open the ESP8266_Calculator_Server.cpp file in the Arduino IDE.
+ 
  2.3 Modify the cSsid and cPassword variables with your Wi-Fi network's credentials.
+
  2.4 Select the correct board (ESP8266) and port in the Arduino IDE.
+ 
  2.5 Upload the code to the ESP8266.
+
  2.6 Once the ESP8266 is connected to the Wi-Fi network, it will start an HTTP server accessible via http://calculator.local.
  
 # Usage
