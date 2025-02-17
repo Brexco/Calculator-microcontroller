@@ -24,7 +24,7 @@ Key Features:
 Dependencies:
 
  - curl library for HTTP requests.
- - Standard C++ libraries such as <iostream>, <string>, and <fstream>.
+ - Standard C++ libraries such as iostream, string, and fstream.
 
 Key Functions:
 
