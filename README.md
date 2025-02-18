@@ -78,7 +78,7 @@ Key Functions:
  - It will then send the request to the web server running on the ESP8266 and display the result.
  - Results of each calculation will be logged in calculations.txt.
    
-2. ESP8266 Web Server (Calculator-microcontroller/Adruino_IDE_ESP-mDNS_Config/ESP8266_Calculator_Server.cpp)
+2. ESP8266 Web Server (Calculator-microcontroller/Adruino_IDE_ESP-mDNS_Config/Adruino_IDE_ESP-mDNS_Config.ino.ino)
    
  2.1 Install the Arduino IDE and the ESP8266 board support.
  
