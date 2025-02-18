@@ -66,7 +66,7 @@ Key Functions:
  - findOperator: Finds the operator in the given expression.
 
 # Installation and Setup
-1. Main Application (main.cpp)
+1. Main Application (in Calculator-microcontroller/Visual_Studio_Function/Ueberarbeitet_Microcontroller/main.cpp)
 
  1.1 Install curl library in your C++ environment (required for HTTP requests).
 
