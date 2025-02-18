@@ -1,7 +1,7 @@
 /*
 * Author:  Jan Wygoda
 * Version: 01.00.04
-* Date:    12.02.2025
+* Date:    17.02.2025
 * File:    main.cpp
 * @brief   Nimmt die Benutzereingaben für eine mathematische Berechnung entgegen.
 * @remarks Sendet den Term zur Berechnung an uC, entgegennimmt das Ergebnis und loggt die Schritte.
