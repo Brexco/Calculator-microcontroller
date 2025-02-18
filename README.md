@@ -103,6 +103,11 @@ Key Functions:
 
  - Access the ESP8266 server via the URL http://calculator.local/calculate?expression=<expression>, where <expression> is a mathematical expression like 1+1.
  - The server will return the result as plain text.
+
+# Error handling 
+
+ - error message when entering incorrect numbers or operators
+ - error message when there is no connection or network connection
    
 # Troubleshooting
 Main Application:
