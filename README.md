@@ -3,7 +3,7 @@
 This project consists of two separate components:
 
  - Main Application (main.cpp): A console-based calculator application that interacts with a web server to perform mathematical calculations.
- - ESP8266 Web Server (ESP8266_Calculator_Server.cpp): A simple web server running on an ESP8266 microcontroller, which handles HTTP requests to perform mathematical calculations.
+ - ESP8266 Web Server (Adruino_IDE_ESP-mDNS_Config.ino): A simple web server running on an ESP8266 microcontroller, which handles HTTP requests to perform mathematical calculations.
 
 Both components work together to allow users to perform basic arithmetic operations via the web, with the results being logged and displayed.
 
