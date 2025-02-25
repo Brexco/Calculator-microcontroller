@@ -1,7 +1,7 @@
 /**
 * @author Jan Wygoda
 * @version 01.00.05
-* @date 12.02.2025
+* @date 17.02.2025
 * @file ESP8266_Calculator_Server.cpp
 * @brief Einfache Webserver-Anwendung zur Berechnung mathematischer Ausdrücke auf einem ESP8266.
 */
