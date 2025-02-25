@@ -1,9 +1,9 @@
 /*
 * Author:  Jan Wygoda
-* Version: 01.00.04
-* Date:    12.02.2025
+* Version: 01.00.05
+* Date:    17.02.2025
 * File:    main.cpp
-* @brief   Nimmt die Benutzereingaben für eine mathematische Berechnung entgegen.
+* @brief   Nimmt die Benutzereingaben fÃ¼r eine mathematische Berechnung entgegen.
 * @remarks Sendet den Term zur Berechnung an uC, entgegennimmt das Ergebnis und loggt die Schritte.
 */
 
@@ -11,7 +11,6 @@
 //      System Includes     //
 //////////////////////////////
 #include <iostream>
-#include <windows.h>
 #include <string>
 #include <curl/curl.h>
 #include <fstream>
@@ -21,8 +20,8 @@
 * @brief   Callback-Funktion zum Schreiben von Daten in einen String.
 * @remarks Diese Funktion wird von cURL verwendet, um empfangene Daten in einen String zu speichern.
 * @param   contents Zeiger auf den Datenblock, der geschrieben werden soll.
-* @param   size Größe eines einzelnen Datenblocks.
-* @param   nmemb Anzahl der Datenblöcke.
+* @param   size GrÃ¶ÃŸe eines einzelnen Datenblocks.
+* @param   nmemb Anzahl der DatenblÃ¶cke.
 * @param   output Zeiger auf den String, in den die Daten geschrieben werden.
 * @return  Die Gesamtzahl der geschriebenen Bytes.
 */
@@ -34,7 +33,7 @@ size_t WriteCallback(void* contents, size_t size, size_t nmemb, std::string* out
 }
 
 /**
-* @brief   Kodiert mathematische Operatoren für eine URL.
+* @brief   Kodiert mathematische Operatoren fÃ¼r eine URL.
 * @remarks Ersetzt bestimmte Operatoren durch ihre URL-kodierten Entsprechungen.
 * @param   cOperation Der mathematische Operator, der kodiert werden soll.
 * @return  Der URL-kodierte Operator als String.
@@ -76,7 +75,7 @@ std::string fetchWebContent(const std::string& sUrl)
 
 /**
 * @brief   Speichert eine Berechnung und das Ergebnis in einer Datei.
-* @remarks Öffnet eine Datei und hängt die Berechnung an das Ende an.
+* @remarks Ã–ffnet eine Datei und hÃ¤ngt die Berechnung an das Ende an.
 * @param   sCalculation Der mathematische Ausdruck als String.
 * @param   sResult Das Ergebnis der Berechnung.
 */
@@ -93,7 +92,7 @@ void saveToFile(const std::string& sCalculation, const std::string& sResult)
 }
 
 /**
-* @brief   Führt eine mathematische Berechnung durch.
+* @brief   FÃ¼hrt eine mathematische Berechnung durch.
 * @remarks Fragt Benutzereingaben ab, sendet eine Anfrage an die URL und speichert das Ergebnis.
 */
 void performCalculation()
@@ -140,7 +139,7 @@ void performCalculation()
 
 /**
 * @brief   Startet das Hauptprogramm.
-* @remarks Führt Berechnungen in einer Schleife aus, bis der Benutzer das Programm beendet.
+* @remarks FÃ¼hrt Berechnungen in einer Schleife aus, bis der Benutzer das Programm beendet.
 * @return  0, wenn das Programm erfolgreich beendet wurde (Wenn was anderes als y/Y eingegeben wurde).
 */
 int main() {
