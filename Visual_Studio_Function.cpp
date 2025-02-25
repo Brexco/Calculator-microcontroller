@@ -1,6 +1,6 @@
 /*
 * Author:  Jan Wygoda
-* Version: 01.00.04
+* Version: 01.00.05
 * Date:    17.02.2025
 * File:    main.cpp
 * @brief   Nimmt die Benutzereingaben für eine mathematische Berechnung entgegen.
@@ -11,7 +11,6 @@
 //      System Includes     //
 //////////////////////////////
 #include <iostream>
-#include <windows.h>
 #include <string>
 #include <curl/curl.h>
 #include <fstream>
